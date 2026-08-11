@@ -1,40 +1,37 @@
 # InfraKit
 
-Ferramenta de diagnóstico de infraestrutura desenvolvida em Python, com arquitetura baseada em plugins.
+InfraKit é uma ferramenta modular de infraestrutura desenvolvida em Python e executada pelo terminal.
 
-O objetivo do InfraKit é permitir a execução de diferentes testes de rede através de uma estrutura modular e extensível.
+O projeto utiliza uma arquitetura baseada em **plugins**, permitindo adicionar novas funcionalidades sem precisar alterar diretamente o Engine.
 
-## Funcionalidades
+O InfraKit também funciona como um projeto prático de aprendizado, com foco em Python, automação, infraestrutura, CLI e arquitetura modular.
 
-* **Ping** — testa a conectividade com o alvo.
-* **DNS** — resolve o domínio e obtém seu endereço IP.
-* **Sistema de plugins** — plugins são descobertos e carregados automaticamente pelo Engine.
-* **Status e resultados** — cada plugin retorna seu status e o resultado da execução.
+## 🚧 Status
 
-## Uso
+**Em desenvolvimento — versão inicial**
 
-Para visualizar os plugins disponíveis:
+Atualmente, o InfraKit possui:
 
-```bash
-python3 main.py plugins
-```
+* Interface CLI interativa
+* Menu principal
+* Sistema de plugins
+* Descoberta automática de plugins
+* Engine para gerenciamento e execução dos plugins
+* Plugin de Ping
+* Plugin de DNS
+* Execução de comandos do sistema através do `subprocess`
+* Sistema padronizado de status e resultados
+* Tratamento básico de erros
+* Execução de scans através do menu
 
-Para executar um scan:
-
-```bash
-python3 main.py scan <alvo>
-```
-
-Exemplo:
-
-```bash
-python3 main.py scan google.com
-```
-
-## Estrutura
+## 📂 Estrutura
 
 ```text
 InfraKit/
+│
+├── cli/
+│   └── menu.py
+│
 ├── core/
 │   ├── engine.py
 │   └── plugin.py
@@ -45,66 +42,200 @@ InfraKit/
 │       └── dns.py
 │
 ├── main.py
+├── .gitignore
 └── README.md
 ```
 
-## Arquitetura
+## ⚙️ Arquitetura
 
-O InfraKit utiliza uma arquitetura baseada em plugins.
+O InfraKit utiliza uma arquitetura modular baseada em plugins:
 
-O `Engine` procura automaticamente por arquivos Python dentro do diretório de plugins, identifica classes que herdam da classe base `Plugin`, cria suas instâncias e adiciona os plugins ao sistema.
+```text
+                 main.py
+                    │
+                    ▼
+             Menu / CLI
+                    │
+                    ▼
+             Menu Control
+                    │
+                    ▼
+                 Engine
+                    │
+          ┌─────────┴─────────┐
+          ▼                   ▼
+      PingPlugin          DNSPlugin
+          │                   │
+          └─────────┬─────────┘
+                    ▼
+               Resultados
+```
 
-Isso permite adicionar novos plugins sem precisar cadastrá-los manualmente no `Engine`.
+O `main.py` é responsável pelo ponto de entrada do programa e pelo controle do fluxo do menu.
+
+O `cli/menu.py` contém a interface do menu e retorna a opção escolhida pelo usuário.
+
+O `Engine` é responsável por carregar e executar os plugins.
+
+Cada plugin possui uma função específica e retorna seu próprio status e resultado.
+
+## 🧩 Sistema de Plugins
+
+O InfraKit possui um sistema de descoberta automática de plugins.
+
+O Engine procura arquivos Python dentro dos diretórios de plugins, importa os módulos e identifica classes que herdam da classe base `Plugin`.
+
+Isso permite adicionar novos plugins sem precisar registrá-los manualmente no Engine.
+
+Atualmente:
+
+| Plugin | Categoria | Função                                |
+| ------ | --------- | ------------------------------------- |
+| Ping   | Network   | Teste de conectividade com um alvo    |
+| DNS    | Network   | Resolução de domínio para endereço IP |
 
 ### Exemplo de fluxo
 
 ```text
-Engine
-  ↓
-Procura os plugins
-  ↓
-Encontra os módulos
-  ↓
-Identifica classes Plugin
-  ↓
-Cria as instâncias
-  ↓
-Executa os plugins
-  ↓
-Retorna status + resultado
+plugins/network/ping.py
+        │
+        ▼
+Engine encontra o arquivo
+        │
+        ▼
+Importa o módulo
+        │
+        ▼
+Identifica PingPlugin
+        │
+        ▼
+Cria uma instância
+        │
+        ▼
+Adiciona aos plugins disponíveis
 ```
 
-## Criando um plugin
+## 🖥️ Menu
 
-Um novo plugin deve herdar da classe base `Plugin` e implementar o método `run()`.
+O InfraKit possui um menu interativo para facilitar a utilização:
 
-Exemplo:
-
-```python
-from core.plugin import Plugin
-
-class MeuPlugin(Plugin):
-
-    def __init__(self):
-        super().__init__("MeuPlugin", "Descrição do plugin")
-
-    def run(self, target):
-        # lógica do plugin
-        return ["SUCESSO", "Resultado"]
+```text
+╔══════════════════════════╗
+║        InfraKit          ║
+╠══════════════════════════╣
+║  1. Scan                 ║
+║  2. Plugins              ║
+║  0. Sair                 ║
+╚══════════════════════════╝
 ```
 
-Depois de colocado no diretório apropriado de plugins, o InfraKit poderá encontrá-lo automaticamente.
+### Scan
 
-## Tecnologias
+Ao selecionar `Scan`, o programa solicita o alvo:
 
-* Python 3
-* `socket`
+```text
+Digite o domínio do scan: google.com
+```
+
+O Engine executa os plugins disponíveis e apresenta os resultados:
+
+```text
+Ping
+
+Status: SUCESSO!
+
+Resultado: ...
+
+DNS
+
+Status: Sucesso
+
+Resultado: 172.xxx.xxx.xxx
+```
+
+### Plugins
+
+A opção `Plugins` mostra os plugins atualmente carregados pelo Engine, incluindo seus nomes e descrições.
+
+## ▶️ Execução
+
+Para executar o InfraKit:
+
+```bash
+python3 main.py
+```
+
+O programa abrirá o menu interativo.
+
+A partir dele é possível selecionar as funções disponíveis.
+
+## 🛠️ Tecnologias
+
+* Python
+* Git
+* GitHub
 * `subprocess`
 * `importlib`
-* `os`
+* CLI
+* Arquitetura modular de plugins
 
-## Status do projeto
+## 🗺️ Próximos passos
 
-🚧 Em desenvolvimento.
+As funcionalidades abaixo fazem parte do planejamento futuro do projeto e ainda não estão implementadas:
 
-O projeto está sendo desenvolvido gradualmente, com foco em uma arquitetura modular que permita adicionar novas ferramentas de diagnóstico através de plugins.
+### Arquitetura
+
+* [ ] Melhorar o sistema de descoberta de plugins
+* [ ] Organização dos plugins por categorias
+* [ ] Melhorar o sistema de resultados
+* [ ] Melhorar o tratamento de erros
+* [ ] Sistema de configuração
+
+### Network
+
+* [ ] Plugin HTTP
+* [ ] Traceroute
+* [ ] Novas ferramentas de análise de rede
+
+### System
+
+* [ ] Informações do sistema
+* [ ] Informações de CPU
+* [ ] Informações de memória
+* [ ] Informações de armazenamento
+* [ ] Informações das interfaces de rede
+
+### Persistência
+
+* [ ] Persistência de resultados com SQLite
+* [ ] Histórico de scans
+* [ ] Visualização de scans anteriores
+* [ ] Exportação de resultados
+
+### Identidade e sincronização
+
+Planejamento para uma etapa mais avançada do projeto:
+
+* [ ] Sistema de identidade baseado em token
+* [ ] Modo de utilização sem conta
+* [ ] Histórico associado à identidade do usuário
+* [ ] API do InfraKit
+* [ ] Sincronização de histórico
+
+> Esses recursos são apenas planos futuros e não fazem parte da versão atual.
+
+## 📚 Objetivo
+
+O InfraKit é desenvolvido como um projeto prático para estudar e aplicar conceitos de:
+
+* Programação em Python
+* Programação orientada a objetos
+* Arquitetura modular
+* Desenvolvimento de CLI
+* Automação
+* Gerenciamento de processos
+* Redes
+* Persistência de dados
+* Arquitetura de software
+
+O projeto será desenvolvido gradualmente, adicionando novas funcionalidades conforme a arquitetura evolui.
