@@ -14,21 +14,22 @@ class Engine:
 
 
     def load_plugins(self):
-        arquivos = os.listdir("plugins/network")
-
-        for arquivo in arquivos:
+        for raiz, diretorios, arquivos in os.walk("plugins"):
+             for arquivo in arquivos:
              
-             if arquivo.endswith(".py"):
-                nome_modulo = arquivo[:-3]  
-                caminho_modulo = f"plugins.network.{nome_modulo}"
-                modulo = importlib.import_module(caminho_modulo)
 
-                for nome in dir(modulo):
-                    objeto = getattr(modulo, nome)
-                    if isinstance(objeto, type):
-                        if issubclass(objeto, Plugin) and objeto is not Plugin:
-                            plugin = objeto()
-                            self.plugins.append(plugin)
+                if arquivo.endswith(".py"):
+                    caminho = os.path.join(raiz, arquivo)
+                    nome_modulo = caminho[:-3]
+                    nome_modulo = nome_modulo.replace("/", ".")  
+                    modulo = importlib.import_module(nome_modulo)
+
+                    for nome in dir(modulo):
+                        objeto = getattr(modulo, nome)
+                        if isinstance(objeto, type):
+                            if issubclass(objeto, Plugin) and objeto is not Plugin:
+                                plugin = objeto()
+                                self.plugins.append(plugin)
 
     def show_plugins(self):
         for plugin in self.plugins:
