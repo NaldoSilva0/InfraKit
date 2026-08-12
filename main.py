@@ -26,6 +26,9 @@ def menu_controle():
                 print("║           SCAN            ║")
                 print("╚═══════════════════════════╝")
                 alvo = input(f"\nDigite o domínio do scan: ")
+                if alvo == '':
+                    print("\nDomínio inválido!")
+                    continue
                 
 
                 resultado = engine.run(alvo)

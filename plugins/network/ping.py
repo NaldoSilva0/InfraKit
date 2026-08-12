@@ -21,5 +21,5 @@ class PingPlugin(Plugin):
         except:
             status = ""
             mensagem = "Erro ao realizar o teste de conectividade"
-            retornar = [status, resposta]
+            retornar = [status, mensagem]
             return retornar

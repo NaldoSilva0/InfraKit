@@ -38,10 +38,17 @@ class Engine:
     def run(self, target):
         lista_plugin = []
         for plugin in self.plugins:
-            
-            resposta = plugin.run(target)
-            lista_plugin.append([plugin.name, resposta])
-            
+            try:
+
+                resposta = plugin.run(target)
+                lista_plugin.append([plugin.name, resposta])
+                
+            except:
+                status = ""
+                resposta = "Erro ao realizar o comando"
+                status = "ERRO!"
+                resposta = [status, resposta]
+                lista_plugin.append([plugin.name, resposta])
         return lista_plugin
 
 
