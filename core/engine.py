@@ -15,6 +15,7 @@ class Engine:
 
     def load_plugins(self):
         for raiz, diretorios, arquivos in os.walk("plugins"):
+             diretorios[:] = [d for d in diretorios if d != "__pycache__"]
              for arquivo in arquivos:
              
 
@@ -26,11 +27,17 @@ class Engine:
 
                     for nome in dir(modulo):
                         objeto = getattr(modulo, nome)
-                        if isinstance(objeto, type):
-                            if issubclass(objeto, Plugin) and objeto is not Plugin:
-                                plugin = objeto()
-                                self.plugins.append(plugin)
+                        if self.is_plugin(objeto):
+                            plugin = objeto()
+                            self.plugins.append(plugin)
 
+    def is_plugin(self, objeto):
+            if isinstance(objeto, type):
+                if issubclass(objeto, Plugin) and objeto is not Plugin:
+                    return True
+                else:
+                    return False            
+            return False                    
     def show_plugins(self):
         for plugin in self.plugins:
                 print(f"Name: {plugin.name}")
