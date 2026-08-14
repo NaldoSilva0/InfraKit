@@ -3,9 +3,18 @@ import subprocess
 
 class PingPlugin(Plugin):
     def __init__(self):
-        super().__init__("Ping", "Realiza teste de conectividade")
+        super().__init__("PING", "Realiza teste de conectividade")
 
     def run(self, target):
+        if target.startswith("http://"):
+            target = target.replace("http://", '')
+
+        elif target.startswith("https://"):
+            target = target.replace("https://", '')
+
+        else:
+            pass
+
         try:
             status = ""
             print(f"Executando Ping em {target}")
@@ -19,7 +28,7 @@ class PingPlugin(Plugin):
             return retornar
         
         except:
-            status = ""
+            status = "ERRO!"
             mensagem = "Erro ao realizar o teste de conectividade"
             retornar = [status, mensagem]
             return retornar

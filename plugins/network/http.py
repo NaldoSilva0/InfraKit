@@ -18,15 +18,16 @@ class HttpPlugin(Plugin):
                 
                 status = "SUCESSO!"
                 resultado = "Requisição realizada com sucesso! código HTTP: 200"
-                retornar = [status, resultado]
+                retornar = status,resultado
                 return retornar
+            
             elif resposta.status_code == 404:
                 status = "ERRO!"
                 resultado = "Recurso não encontrado! Código HTTP: 404"
-                retornar = [status, resultado]
+                retornar = status,resultado
                 return retornar
         except:
             status = "ERRO!"
             resultado = "Não foi possível realizar a requisição"
-            retornar = [status, resultado]
+            retornar = status, resultado
             return retornar

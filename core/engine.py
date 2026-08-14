@@ -1,6 +1,7 @@
 from core.plugin import Plugin
 import os
 import importlib
+from core.result import PluginResult
 
 
 
@@ -47,16 +48,18 @@ class Engine:
         lista_plugin = []
         for plugin in self.plugins:
             try:
-
-                resposta = plugin.run(target)
-                lista_plugin.append([plugin.name, resposta])
                 
+                resposta = plugin.run(target)
+                
+                status  =  resposta[0] 
+                resposta =   resposta[1] 
+                resultado = PluginResult(plugin.name, status, resposta)
+                lista_plugin.append(resultado)
             except:
-                status = ""
+                status = resposta[0]
                 resposta = "Erro ao realizar o comando"
-                status = "ERRO!"
-                resposta = [status, resposta]
-                lista_plugin.append([plugin.name, resposta])
+                resultado = PluginResult(plugin.name, status, resposta)
+                lista_plugin.append(resultado)
         return lista_plugin
 
 

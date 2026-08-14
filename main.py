@@ -17,12 +17,8 @@ def executar_scan():
                         
         
         resultado = engine.run(alvo)
-        for resultado_plugin in resultado:
-            print("-"*70)                            
-            print(f"\n{resultado_plugin[0]}\n")
-            print("-"*70)
-            print(f"Status: {resultado_plugin[1][0]}\n")
-            print(f"Resultado: {resultado_plugin[1][1]}\n")
+        for resultado_plugin in resultado:                        
+           print(resultado_plugin)
         
         print("\n--Scan finalizado--\n")
         input("Pressione ENTER para retornar ao menu...")
@@ -58,6 +54,7 @@ def menu_controle():
             print("\nOpção inválida!")
             print("Escolha uma opção disponível.")
             continue
+
 
 menu_controle()
 
