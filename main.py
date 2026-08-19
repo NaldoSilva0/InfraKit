@@ -17,12 +17,19 @@ def executar_scan():
                         
         
         resultado = engine.run(alvo)
-        for resultado_plugin in resultado:                        
-           print(resultado_plugin)
+        #for resultado_plugin in resultado.resultados:                        
+        print(resultado)
         
         print("\n--Scan finalizado--\n")
         input("Pressione ENTER para retornar ao menu...")
 
+def log_historico():
+        print("═"*70)
+        print("╔═══════════════════════════╗")
+        print("║         HISTÓRICO         ║")
+        print("╚═══════════════════════════╝")
+        print(engine.logger.historico())
+        input("Pressione ENTER para retornar ao menu...")
 
 def mostrar_plugins():
         print("═"*70)
@@ -42,9 +49,11 @@ def menu_controle():
         if resposta == "2": 
             mostrar_plugins()
 
-
         elif resposta == "1":
             executar_scan()
+
+        elif resposta == "3":
+            log_historico()
 
         elif resposta == "0":
             print("Saindo de InfraKit...")

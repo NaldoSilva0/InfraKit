@@ -1,6 +1,8 @@
 from core.plugin import Plugin
 import os
 import importlib
+from core.scan import ScanResult
+from core.logger import Logger
 from core.result import PluginResult
 
 
@@ -10,6 +12,7 @@ class Engine:
 
     def __init__(self):
         self.plugins = []
+        self.logger = Logger("logs/infrakit.log")
         self.load_plugins()
 
 
@@ -38,7 +41,8 @@ class Engine:
                     return True
                 else:
                     return False            
-            return False                    
+            return False        
+                
     def show_plugins(self):
         for plugin in self.plugins:
                 print(f"Name: {plugin.name}")
@@ -50,17 +54,21 @@ class Engine:
             try:
                 
                 resposta = plugin.run(target)
-                
-                status  =  resposta[0] 
-                resposta =   resposta[1] 
-                resultado = PluginResult(plugin.name, status, resposta)
-                lista_plugin.append(resultado)
-            except:
-                status = resposta[0]
-                resposta = "Erro ao realizar o comando"
-                resultado = PluginResult(plugin.name, status, resposta)
-                lista_plugin.append(resultado)
-        return lista_plugin
+                lista_plugin.append(resposta)
+
+                registro_log = f"{target} | {resposta.nome} | {resposta.status}"
+                self.logger.log(registro_log)
+
+            except Exception as erro:
+                print(f"ERRO NO PLUGIN {plugin.name}: {erro}")
+
+                resposta = PluginResult(self.name, "ERRO!", "Erro ao realizar o comando")
+                lista_plugin.append(resposta)
+
+                registro_log = f"{target} | {resposta.nome} | {resposta.status}"
+                self.logger.log(registro_log)
+        scan_retornar = ScanResult(target, lista_plugin)
+        return scan_retornar
 
 
         

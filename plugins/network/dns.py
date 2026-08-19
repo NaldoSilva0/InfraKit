@@ -1,5 +1,6 @@
 import socket
 from core.plugin import Plugin
+from core.result import PluginResult
 
 class DNSPlugin(Plugin):
     def __init__(self):
@@ -16,14 +17,16 @@ class DNSPlugin(Plugin):
             pass
 
         try:
-            ip = socket.gethostbyname(target)
+            resultado = socket.gethostbyname(target)
             status = "SUCESSO!"
-            retornar = [status, ip]
+            retornar = PluginResult(self.name, status, resultado)
     
             return retornar
         except:
             status = "ERRO!"
-            texto = "Não foi possível resolver o domínio"
-            retornar = [status, texto]
+            resultado = "Não foi possível resolver o domínio"
+            retornar = PluginResult(self.name, status, resultado)
+
+            
             return retornar
 

@@ -4,11 +4,9 @@ import os
 class Logger:
     def __init__(self, arquivo):
         self.arquivo = arquivo
-        caminho = "logs"
-        caminho_arquivo = os.path.join(caminho)
-        caminho = os.path.dirname(self.arquivo)
 
-        os.makedirs(caminho_arquivo, exist_ok=True)
+        caminho = os.path.dirname(self.arquivo)
+        os.makedirs(caminho, exist_ok=True)
 
     def log(self, mensagem):
        with open(self.arquivo, "a", encoding="utf-8") as arquivo:
