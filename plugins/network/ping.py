@@ -18,7 +18,6 @@ class PingPlugin(Plugin):
 
         try:
             status = ""
-            print(f"Executando Ping em {target}")
             resultado = subprocess.run(["ping","-c", "2", target], capture_output=True, text=True)
             if resultado.returncode == 0:
                 status = "SUCESSO!"

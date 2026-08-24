@@ -6,7 +6,7 @@ from cli.menu import menu
 engine = Engine()
 
 def executar_scan():
-        print("═"*70)
+
         print("╔═══════════════════════════╗")
         print("║           SCAN            ║")
         print("╚═══════════════════════════╝")
@@ -17,7 +17,8 @@ def executar_scan():
                         
         
         resultado = engine.run(alvo)
-        #for resultado_plugin in resultado.resultados:                        
+        print("Executando plugins...")
+
         print(resultado)
         
         print("\n--Scan finalizado--\n")

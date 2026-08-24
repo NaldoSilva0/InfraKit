@@ -5,4 +5,4 @@ class PluginResult():
         self.resultado = resultado
 
     def __str__(self):
-        return f"\n{self.nome}\nStatus: {self.status}\nResultado: {self.resultado}\n"
+        return f"\n{self.nome}\nStatus: {self.status}\nResultado:\n{self.resultado}\n"

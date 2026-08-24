@@ -6,4 +6,4 @@ class ScanResult:
     def __str__(self):
         resultados = "\n".join(
             str(resultado) for resultado in self.resultados)
-        return f"{self.target}\n{resultados}"
+        return f"{resultados}"

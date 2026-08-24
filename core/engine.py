@@ -56,7 +56,7 @@ class Engine:
                 resposta = plugin.run(target)
                 lista_plugin.append(resposta)
 
-                registro_log = f"{target} | {resposta.nome} | {resposta.status}"
+                registro_log = f"{target} | {resposta.nome:<8} | {resposta.status}"
                 self.logger.log(registro_log)
 
             except Exception as erro:
@@ -65,8 +65,8 @@ class Engine:
                 resposta = PluginResult(self.name, "ERRO!", "Erro ao realizar o comando")
                 lista_plugin.append(resposta)
 
-                registro_log = f"{target} | {resposta.nome} | {resposta.status}"
-                self.logger.log(registro_log)
+            registro_log = f"{target} | {resposta.nome:<6} | {resposta.status}"
+                #self.logger.log(registro_log)
         scan_retornar = ScanResult(target, lista_plugin)
         return scan_retornar
 
