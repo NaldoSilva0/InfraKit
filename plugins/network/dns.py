@@ -113,7 +113,14 @@ class DNSPlugin(Plugin):
             cname = "Nenhum registro encontrado"
 
             
-        resultado = f"A:\n{ipv4}\n\nAAAA:\n{ipv6}\n\nMX:\n{mx}\n\nNS:\n{ns}\n\nTXT:\n{txt}\n\nCNAME:\n{cname}"
+        resultado = {
+            "A": ipv4,
+            "AAAA": ipv6,
+            "MX": mx,
+            "NS": ns,
+            "TXT": txt,
+            "CNAME": cname,
+        }
 
         retornar = PluginResult(self.name, status, resultado)    
         return retornar

@@ -5,4 +5,12 @@ class PluginResult():
         self.resultado = resultado
 
     def __str__(self):
-        return f"\n{self.nome}\nStatus: {self.status}\nResultado:\n{self.resultado}\n"
+        resultado_final = ""
+
+        if isinstance(self.resultado, dict):
+            for chave, valor in self.resultado.items():
+                resultado_final += f"{chave}:\n{valor}\n\n"                    
+        else:
+            resultado_final = str(self.resultado)
+
+        return f"\n{self.nome}\nStatus: {self.status}\nResultado:\n{resultado_final}\n"

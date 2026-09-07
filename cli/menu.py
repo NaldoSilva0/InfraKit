@@ -7,6 +7,8 @@ def menu():
         print("║  1. Scan                 ║")
         print("║  2. Plugins              ║")
         print("║  3. Histórico            ║")
+        print("║  4. OSINT                ║")    
+        print("║  5. Hardware Status      ║")           
         print("║  0. Sair                 ║")
         print("╚══════════════════════════╝")
         print("═"*70)

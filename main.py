@@ -5,6 +5,35 @@ from cli.menu import menu
 
 engine = Engine()
 
+def executar_osint():
+        print("╔═══════════════════════════╗")
+        print("║           OSINT           ║")
+        print("╠═══════════════════════════╣")
+        print("║  1. Username              ║")
+        print("║  2. Voltar                ║") 
+        print("╚═══════════════════════════╝")
+        print("Função NÂO está 100% precisa, será necessário uma verificação manual do usuário para a confirmação!")
+
+
+
+        opcao = input("Digite a opção que deseja: ")
+        if opcao == "1":
+            usuario_alvo = input(f"\nDigite o username: ")
+            if usuario_alvo == "":
+                print("\nUsername inválido!")
+                return
+            resposta = engine.run_plugin("Username", usuario_alvo)
+            print(resposta)
+            input("Pressione ENTER para retornar ao menu...")
+
+def executar_hardconfig():
+        print("╔═══════════════════════════╗")
+        print("║        HARD CONFIG        ║")
+        print("╚═══════════════════════════╝")
+        resposta = engine.run_plugin_no_target("HardConfig")
+        print(resposta)
+        input("Pressione ENTER para retornar ao menu...")
+     
 def executar_scan():
 
         print("╔═══════════════════════════╗")
@@ -42,6 +71,7 @@ def mostrar_plugins():
         input("Pressione ENTER para retornar ao menu...")
 
 
+     
 
 def menu_controle():
     while True:
@@ -55,6 +85,12 @@ def menu_controle():
 
         elif resposta == "3":
             log_historico()
+
+        elif resposta == "4":
+            executar_osint()
+
+        elif resposta == "5":
+            executar_hardconfig()
 
         elif resposta == "0":
             print("Saindo de InfraKit...")
