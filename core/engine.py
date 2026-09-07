@@ -78,7 +78,7 @@ class Engine:
             except Exception as erro:
                 #print(f"ERRO NO PLUGIN {plugin.name}: {erro}")
 
-                resposta = PluginResult(plugin.name, "ERRO!", "Erro ao realizar o comando")
+                resposta = PluginResult(plugin.name, "ERRO!", erro)
                 lista_plugin.append(resposta)
 
             registro_log = f"{target} | {resposta.nome:<6} | {resposta.status}"

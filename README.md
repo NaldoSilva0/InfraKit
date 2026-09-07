@@ -1,201 +1,232 @@
-# InfraKit
+# 🔧 InfraKit
 
-O **InfraKit** é uma ferramenta modular de infraestrutura desenvolvida em Python e executada através do terminal.
+Ferramenta modular de infraestrutura desenvolvida em **Python**, executada através do terminal.
 
-O projeto tem como objetivo estudar, na prática, conceitos de **Python, automação, redes, infraestrutura, arquitetura modular e desenvolvimento baseado em plugins**.
+O InfraKit foi criado como um projeto prático para estudar **Python, Linux, automação, redes, OSINT e arquitetura modular baseada em plugins**.
 
----
-
-## 🚧 Status
-
-**Em desenvolvimento — versão inicial**
-
-Atualmente, o InfraKit possui:
-
-* Interface CLI
-* Sistema modular de plugins
-* Descoberta automática de plugins
-* Engine para gerenciamento e execução dos plugins
-* `PluginResult` para padronização dos resultados
-* `ScanResult` para organização de um scan completo
-* Logger com data e hora
-* Histórico de scans
-* Plugin de Ping
-* Plugin HTTP
-* Plugin DNS
-* Plugin de PortScan
-* Verificação de portas TCP através de `socket`
-* Execução de comandos do sistema através de `subprocess`
+> 🚧 **Projeto em desenvolvimento**
 
 ---
 
-## 📂 Estrutura
+## 📌 Sobre o projeto
+
+O InfraKit reúne diferentes ferramentas de diagnóstico e análise em uma única interface de terminal.
+
+A aplicação utiliza uma arquitetura baseada em **plugins**, permitindo adicionar novas funcionalidades sem precisar concentrar toda a lógica em um único arquivo.
+
+Atualmente, o projeto possui módulos para:
+
+* 🌐 Análise de rede
+* 🔎 Consultas DNS
+* 👤 Verificação de usernames em plataformas públicas
+* 💻 Monitoramento básico do computador
+* 📜 Histórico de scans
+* 🧩 Descoberta automática de plugins
+
+---
+
+## 🏗️ Arquitetura
+
+O funcionamento básico do InfraKit segue esta estrutura:
+
+```text
+                    ┌──────────────┐
+                    │    main.py   │
+                    └──────┬───────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │  CLI / Menu  │
+                    └──────┬───────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │    Engine    │
+                    └──────┬───────┘
+                           │
+              ┌────────────┼────────────┐
+              ▼            ▼            ▼
+          Network        OSINT       Computer
+              │            │            │
+              ▼            ▼            ▼
+           Plugins      Plugins       Plugins
+              │            │            │
+              └────────────┼────────────┘
+                           ▼
+                    ┌──────────────┐
+                    │ PluginResult │
+                    └──────────────┘
+```
+
+O `Engine` é responsável por carregar e executar os plugins.
+
+Cada plugin possui uma responsabilidade específica e retorna seus resultados através do sistema de resultados do InfraKit.
+
+---
+
+## 📂 Estrutura do projeto
 
 ```text
 InfraKit/
 │
-├── core/
-│   ├── engine.py
-│   ├── plugin.py
-│   ├── result.py
-│   ├── scan.py
-│   └── logger.py
-│
-├── plugins/
-│   └── network/
-│       ├── ping.py
-│       ├── dns.py
-│       ├── http.py
-│       └── portscan.py
-│
 ├── cli/
 │   └── menu.py
 │
+├── core/
+│   ├── engine.py
+│   ├── logger.py
+│   ├── plugin.py
+│   ├── result.py
+│   └── scan.py
+│
+├── plugins/
+│   ├── computer/
+│   │   └── hardconfig.py
+│   │
+│   ├── network/
+│   │   ├── dns.py
+│   │   ├── http.py
+│   │   ├── ping.py
+│   │   └── portscan.py
+│   │
+│   └── osint/
+│       └── username.py
+│
 ├── logs/
-│   └── infrakit.log
 │
 ├── main.py
+├── teste.py
 ├── .gitignore
 └── README.md
 ```
 
 ---
 
-## ⚙️ Arquitetura
+## ⚙️ Funcionalidades
 
-O InfraKit utiliza uma arquitetura baseada em plugins.
+### 🌐 Network
 
-```text
-                    main.py
-                       │
-                       ▼
-                     Engine
-                       │
-          ┌────────────┼────────────┐
-          ▼            ▼            ▼
-        Ping          HTTP         DNS
-          │            │            │
-          └────────────┼────────────┘
-                       ▼
-                    PortScan
-                       │
-                       ▼
-                 PluginResult
-                       │
-                       ▼
-                  ScanResult
-                       │
-              ┌────────┴────────┐
-              ▼                 ▼
-           Logger             CLI
-```
+Plugins relacionados à análise de rede.
 
-### Engine
-
-O `Engine` é responsável por:
-
-* descobrir plugins automaticamente;
-* carregar os módulos;
-* identificar classes que herdam de `Plugin`;
-* executar os plugins;
-* organizar os resultados;
-* registrar os resultados no log;
-* criar o `ScanResult`.
-
-### Plugin
-
-Cada funcionalidade do InfraKit é implementada como um plugin independente.
-
-Todos os plugins seguem o mesmo padrão:
-
-```text
-Plugin
-  │
-  └── run(target)
-          │
-          ▼
-    PluginResult
-```
-
-Isso permite adicionar novas funcionalidades sem precisar modificar o funcionamento principal do Engine.
+| Plugin   | Função                    |
+| -------- | ------------------------- |
+| Ping     | Teste de conectividade    |
+| DNS      | Consulta registros DNS    |
+| HTTP     | Consulta informações HTTP |
+| PortScan | Verificação de portas     |
 
 ---
 
-## 📦 Resultados
+### 🔎 OSINT
 
-O InfraKit possui duas classes para organização dos resultados.
+O módulo OSINT permite verificar a presença de um username em plataformas públicas.
 
-### PluginResult
+Atualmente possui suporte para plataformas como:
 
-Representa o resultado de um único plugin.
+* GitHub
+* Reddit
+* Instagram
+* Facebook
+* TikTok
 
-Possui:
+Como diferentes plataformas possuem diferentes formas de resposta, o InfraKit pode retornar estados como:
 
 ```text
-nome
-status
-resultado
+Registrado!
+Não registrado!
+Não foi possível verificar
+Consulta bloqueada pela plataforma
 ```
+
+O objetivo é evitar tratar uma resposta HTTP genérica como uma confirmação absoluta de existência.
+
+---
+
+### 💻 Hardware Status
+
+O plugin `HardConfig` permite visualizar informações básicas do sistema:
+
+* Uso da RAM
+* Uso da CPU
+* Armazenamento
+* Dados de rede
 
 Exemplo:
 
 ```text
-PING
-Status: SUCESSO!
-Resultado:
-PING google.com ...
-```
-
-### ScanResult
-
-Representa o resultado completo de um scan.
-
-Ele contém:
-
-```text
-target
-resultados
-```
-
-onde `resultados` é uma coleção de `PluginResult`.
-
----
-
-## 🔌 Plugins
-
-### Ping
-
-Realiza um teste de conectividade utilizando o comando `ping`.
-
-Exemplo:
-
-```text
-PING
-Status: SUCESSO!
-Resultado:
-2 packets transmitted, 2 received, 0% packet loss
+╔══════════════════════════════════════════════════════╗
+║               HardConfig - System Monitor            ║
+╠══════════════════════════════════════════════════════╣
+║ RAM                                                  ║
+╠══════════════════════════════════════════════════════╣
+║ RAM Total:  3.71GB                                   ║
+║ RAM Usando:  2.37GB                                  ║
+║ RAM Barra: [████████████--------] 63.7%              ║
+╠══════════════════════════════════════════════════════╣
+║ CPU                                                  ║
+╠══════════════════════════════════════════════════════╣
+║ CPU Total:  45.9%                                    ║
+║ CPU Barra:  [█████████-----------] 45.9%             ║
+╠══════════════════════════════════════════════════════╣
+║ ARMAZENAMENTO                                        ║
+╠══════════════════════════════════════════════════════╣
+║ DISCO Total:  194.03GB                               ║
+║ DISCO Usando:  80.23GB                               ║
+║ DISCO Barra: [████████------------] 41.3%             ║
+╠══════════════════════════════════════════════════════╣
+║ REDE                                                 ║
+╠══════════════════════════════════════════════════════╣
+║ BYTES Enviados:  22.79MB                             ║
+║ BYTES Recebidos:  43.54MB                            ║
+╚══════════════════════════════════════════════════════╝
 ```
 
 ---
 
-### HTTP
+## 🧩 Sistema de Plugins
 
-Realiza uma requisição HTTP ao alvo e verifica o código de resposta.
+Uma das principais características do InfraKit é o sistema de plugins.
 
-Exemplo:
+Novos plugins podem ser adicionados dentro da pasta:
 
 ```text
-HTTP
-Status: SUCESSO!
-Resultado:
-Requisição realizada com sucesso! código HTTP: 200
+plugins/
+```
+
+O `Engine` realiza a descoberta dos arquivos e identifica automaticamente as classes que herdam da classe base `Plugin`.
+
+Isso permite adicionar novas funcionalidades sem precisar alterar diretamente o núcleo da aplicação.
+
+Exemplo conceitual:
+
+```python
+from core.plugin import Plugin
+
+class MeuPlugin(Plugin):
+
+    def __init__(self):
+        super().__init__(
+            "MeuPlugin",
+            "Descrição do plugin"
+        )
+
+    def run(self, target):
+        ...
 ```
 
 ---
 
-### DNS
+## 📊 Sistema de resultados
 
-Realiza a resolução DNS do domínio.
+Os plugins utilizam `PluginResult` para padronizar suas respostas.
+
+Um resultado possui:
+
+```text
+Nome
+Status
+Resultado
+```
 
 Exemplo:
 
@@ -203,209 +234,128 @@ Exemplo:
 DNS
 Status: SUCESSO!
 Resultado:
-142.250.219.238
+A:
+142.250.xxx.xxx
 ```
+
+Resultados que possuem múltiplas informações também podem utilizar estruturas como `dict`.
 
 ---
 
-### PortScan
+## 📜 Histórico e Logs
 
-Realiza uma verificação de portas TCP comuns utilizando o módulo `socket` do Python.
+O InfraKit possui um sistema de registro das execuções através do `Logger`.
 
-Atualmente são verificadas:
+Os registros são utilizados para manter informações sobre os plugins executados e seus respectivos status.
 
-| Porta | Serviço |
-| ----: | ------- |
-|    22 | SSH     |
-|    53 | DNS     |
-|    80 | HTTP    |
-|   443 | HTTPS   |
-|  8080 | HTTP    |
-
-Exemplo:
-
-```text
-PortScan
-Status: SUCESSO!
-Resultado:
-   22 | SSH   | FECHADA
-   53 | DNS   | FECHADA
-   80 | HTTP  | FECHADA
-  443 | HTTPS | FECHADA
- 8080 | HTTP  | ABERTA
-```
-
-O PortScan utiliza `socket` e `connect_ex()` para verificar se uma conexão TCP pode ser estabelecida na porta analisada.
+Os arquivos de log são ignorados pelo Git através do `.gitignore`.
 
 ---
 
-## 📝 Logger
+## ▶️ Executando
 
-O InfraKit possui um sistema de logs para registrar os resultados dos plugins.
+Clone o repositório:
 
-Os registros são armazenados em:
-
-```text
-logs/infrakit.log
+```bash
+git clone https://github.com/NaldoSilva0/InfraKit.git
 ```
 
-Cada registro contém:
+Entre na pasta:
 
-```text
-data/hora | alvo | plugin | status
+```bash
+cd InfraKit
 ```
 
-Exemplo:
-
-```text
-24/08/2026 - 16:18:37 | google.com | PING | SUCESSO!
-24/08/2026 - 16:18:38 | google.com | HTTP | SUCESSO!
-24/08/2026 - 16:18:38 | google.com | PortScan | SUCESSO!
-24/08/2026 - 16:18:38 | google.com | DNS | SUCESSO!
-```
-
-A pasta `logs` é criada automaticamente quando necessário.
-
----
-
-## ▶️ Execução
-
-Para iniciar o InfraKit:
+Execute:
 
 ```bash
 python3 main.py
 ```
 
-O menu principal apresenta:
+---
+
+## 🖥️ Menu
+
+O InfraKit possui uma interface de terminal com opções como:
 
 ```text
 ╔══════════════════════════╗
-║        InfraKit           ║
+║        InfraKit          ║
 ╠══════════════════════════╣
 ║  1. Scan                 ║
 ║  2. Plugins              ║
 ║  3. Histórico            ║
+║  4. OSINT                ║
+║  5. Hardware Status      ║
 ║  0. Sair                 ║
 ╚══════════════════════════╝
 ```
 
-### Scan
-
-A opção `Scan` executa todos os plugins disponíveis contra o alvo informado.
-
-Exemplo:
-
-```text
-Digite o domínio do scan: google.com
-```
-
-O Engine executará automaticamente os plugins carregados.
-
-### Plugins
-
-Lista os plugins encontrados pelo sistema.
-
-### Histórico
-
-Exibe os registros armazenados pelo Logger.
-
 ---
 
-## 🛠️ Tecnologias
+## 🛠️ Tecnologias utilizadas
 
-* Python
-* Git
-* GitHub
-* CLI
+* **Python**
+* **Linux**
+* **Git / GitHub**
+* `requests`
+* `psutil`
+* `dnspython`
 * `subprocess`
 * `socket`
-* `datetime`
-* `os`
 * `importlib`
-
----
-
-## 🧩 Sistema de plugins
-
-O InfraKit possui descoberta automática de plugins.
-
-Para adicionar uma nova funcionalidade, basta criar um novo módulo dentro da pasta `plugins` e implementar uma classe que herde de `Plugin`.
-
-O Engine identifica automaticamente o novo plugin durante a inicialização.
-
-Fluxo:
-
-```text
-Novo plugin
-     │
-     ▼
-Herda Plugin
-     │
-     ▼
-Implementa run()
-     │
-     ▼
-Retorna PluginResult
-     │
-     ▼
-Engine detecta automaticamente
-```
-
-Isso permite que o projeto cresça de forma modular.
 
 ---
 
 ## 🗺️ Próximos passos
 
-Funcionalidades planejadas:
+O projeto ainda está em desenvolvimento.
+
+Algumas ideias para versões futuras:
 
 * [ ] Melhorar o sistema de resultados
-* [ ] Melhorar o PortScan
-* [ ] Adicionar identificação de serviços
+* [ ] Melhorar o tratamento de erros
 * [ ] Adicionar novos plugins de infraestrutura
-* [ ] Plugin de informações HTTP
-* [ ] Plugin WHOIS
-* [ ] Sistema automático de descoberta de plugins
-* [ ] Persistência de resultados com SQLite
-* [ ] Histórico estruturado de scans
-* [ ] Ferramentas de OSINT
-* [ ] Novos módulos de análise
-* [ ] Melhorar tratamento de erros
-* [ ] Configuração das portas do PortScan
-* [ ] Sistema de configuração do InfraKit
-
-> As funcionalidades listadas acima são planos futuros e ainda não estão implementadas.
+* [ ] Adicionar novas plataformas ao OSINT
+* [ ] Melhorar o sistema de histórico
+* [ ] Persistência de dados com SQLite
+* [ ] Melhorar a interface CLI
+* [ ] Adicionar testes automatizados
+* [ ] Melhorar a documentação dos plugins
+* [ ] Criar novos módulos de análise
 
 ---
 
-## 📚 Objetivo do projeto
+## 🎯 Objetivo
 
-O InfraKit também funciona como um projeto prático de aprendizado.
+O InfraKit é, acima de tudo, um projeto prático de aprendizado.
 
-Através do desenvolvimento da ferramenta, são estudados conceitos como:
+A ideia é utilizar o desenvolvimento da ferramenta para estudar e aplicar conceitos de:
 
-* Programação orientada a objetos;
-* Herança;
-* Modularização;
-* Exceções;
-* Manipulação de arquivos;
-* Automação;
-* Redes;
-* Sockets;
-* TCP;
-* DNS;
-* HTTP;
-* CLI;
-* Arquitetura de software;
-* Git e GitHub;
-* Desenvolvimento baseado em plugins.
+```text
+Python
+   ↓
+Linux
+   ↓
+Redes
+   ↓
+Automação
+   ↓
+APIs
+   ↓
+Arquitetura de software
+   ↓
+Plugins
+   ↓
+OSINT
+```
 
-O projeto será desenvolvido gradualmente, adicionando novas funcionalidades enquanto a arquitetura é aprimorada.
+O projeto continuará evoluindo conforme novos conceitos forem aprendidos e novas funcionalidades forem implementadas.
 
 ---
 
-## ⚠️ Uso
+## ⚠️ Aviso
 
-Utilize as funcionalidades de análise de rede somente em sistemas, dispositivos e redes para os quais você possui autorização.
+O InfraKit deve ser utilizado apenas em sistemas, redes e serviços nos quais você tenha autorização para realizar testes e consultas.
 
-O InfraKit é desenvolvido principalmente para **aprendizado, administração de infraestrutura e testes em ambientes autorizados**.
+O projeto tem finalidade **educacional, de administração de sistemas e análise de informações públicas**.

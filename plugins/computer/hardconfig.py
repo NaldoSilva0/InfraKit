@@ -51,8 +51,8 @@ class HardConfig(Plugin):
             _, cpus_total = self.uso_cpu()
             cpu_barra = self.barra(cpus_total)     
 
-            _, disco_uso, disco_total = self.uso_armazenamento()
-            disco_porcentagem = (disco_total / disco_uso) *100
+            _, disco_total, disco_uso = self.uso_armazenamento()
+            disco_porcentagem = (disco_uso / disco_total) *100
             disco_barra = self.barra(disco_porcentagem)
 
             _, enviados, recebidos = self.uso_rede()
@@ -75,8 +75,8 @@ class HardConfig(Plugin):
             f"╠══════════════════════════════════════════════════════╣",
             f"║ ARMAZENAMENTO                                        ║",
             f"╠══════════════════════════════════════════════════════╣",  
-            f"║ DISCO Total:  {disco_total:.2f}GB                                ║",
-            f"║ DISCO Usando:  {disco_uso:.2f}GB                              ║",
+            f"║ DISCO Total:  {disco_total:.2f}GB                               ║",
+            f"║ DISCO Usando:  {disco_uso:.2f}GB                               ║",
             f"║ DISCO Barra: {disco_barra}            ║",       
             f"╠══════════════════════════════════════════════════════╣",
             f"║ REDE                                                 ║",
