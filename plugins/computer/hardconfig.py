@@ -6,7 +6,7 @@ import psutil
 
 class HardConfig(Plugin):
     def __init__(self):
-        super().__init__("HardConfig", "Mostra as informações internas do seu computador")
+        super().__init__("HardConfig", "Mostra as informações internas do seu computador", "computer")
 
         
 
@@ -60,8 +60,6 @@ class HardConfig(Plugin):
 
             resultado = [
             f"╔══════════════════════════════════════════════════════╗",
-            f"║               HardConfig - System Monitor            ║",
-            f"╠══════════════════════════════════════════════════════╣",
             f"║ RAM                                                  ║",
             f"╠══════════════════════════════════════════════════════╣",            
             f"║ RAM Total:  {ram_total:.2f}GB                                   ║",

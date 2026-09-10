@@ -5,7 +5,7 @@ from core.result import PluginResult
 
 class DNSPlugin(Plugin):
     def __init__(self):
-        super().__init__("DNS", "Obtém informações DNS do alvo")
+        super().__init__("DNS", "Obtém informações DNS do alvo", "network")
 
     def consultar_dns(self, target):
         try:

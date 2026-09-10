@@ -4,7 +4,7 @@ from core.result import PluginResult
 
 class HttpPlugin(Plugin):
     def __init__(self):
-        super().__init__("HTTP", "Obtem informações básicas de um servidor http")
+        super().__init__("HTTP", "Obtem informações básicas de um servidor http", "network")
 
     def run(self, target):
         status = ""

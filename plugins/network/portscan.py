@@ -13,7 +13,7 @@ lista_portas = {
 class PortScan(Plugin):
     def __init__(self):
                
-        super().__init__("PortScan", "Verifica portas de rede específicas")
+        super().__init__("PortScan", "Verifica portas de rede específicas", "network")
 
     def run(self, target):
         resultados = []

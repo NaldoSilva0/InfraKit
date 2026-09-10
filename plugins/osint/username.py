@@ -56,7 +56,7 @@ USER_AGENTS = [
 
 class UsernamePlugin(Plugin):
     def __init__(self):
-        super().__init__("Username", "Verifica a presença de um usuários em plataformas públicas")
+        super().__init__("Username", "Verifica a presença de um usuários em plataformas públicas", "osint")
 
     def get_headers(self):
             return {
@@ -137,7 +137,7 @@ class UsernamePlugin(Plugin):
         
     def run(self, target):
         usuario = target.strip()
-        resultado = []
+        avaliacao = []
         session = requests.Session()
 
         try:
@@ -184,17 +184,17 @@ class UsernamePlugin(Plugin):
         Status HTTP: {resposta.status_code}
         Situação: {situacao}
         """    
-                        resultado.append(mensagem)
+                        avaliacao.append(mensagem)
                         print(mensagem)
                         
 
                 except requests.RequestException as e:
-                        resultado.append(f"Plataforma: {nome}\nErro: {str(e)}")
+                    avaliacao.append(f"Plataforma: {nome}\nErro: {str(e)}")
 
                 time.sleep(random.uniform(1.2, 2.8))
 
-            resultado_final = "\n\n" + ("-" * 50 + "\n\n").join(resultado)
-            return PluginResult(self.name, "SUCESSO!", resultado_final)
+           # ultimo_resultado = print(mensagem)
+           # return PluginResult(self.name, "SUCESSO!", ultimo_resultado)
 
         except Exception as e:
             return PluginResult(self.name, "ERRO!", f"Erro geral: {str(e)}")

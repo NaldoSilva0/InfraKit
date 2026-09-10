@@ -4,6 +4,8 @@ import importlib
 from core.scan import ScanResult
 from core.logger import Logger
 from core.result import PluginResult
+from core.database import salvar_scan, criar_scan
+
 
 
 
@@ -66,7 +68,10 @@ class Engine:
 
     def run(self, target):
         lista_plugin = []
+        scan_id = criar_scan(target)
         for plugin in self.plugins:
+            if plugin.categoria != "network":
+                continue
             try:
                 
                 resposta = plugin.run(target)
@@ -74,6 +79,14 @@ class Engine:
 
                 registro_log = f"{target} | {resposta.nome:<8} | {resposta.status}"
                 self.logger.log(registro_log)
+
+                salvar_scan(
+                    scan_id,
+                    target,
+                    resposta.nome,
+                    resposta.status,
+                    resposta.resultado
+                )
 
             except Exception as erro:
                 #print(f"ERRO NO PLUGIN {plugin.name}: {erro}")

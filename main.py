@@ -1,18 +1,19 @@
-
+import pyfiglet
 import time
 from core.engine import Engine
 from cli.menu import menu
+from core.database import listar_scans
+import json
 
 engine = Engine()
 
 def executar_osint():
-        print("╔═══════════════════════════╗")
-        print("║           OSINT           ║")
-        print("╠═══════════════════════════╣")
-        print("║  1. Username              ║")
-        print("║  2. Voltar                ║") 
-        print("╚═══════════════════════════╝")
-        print("Função NÂO está 100% precisa, será necessário uma verificação manual do usuário para a confirmação!")
+        texto = pyfiglet.figlet_format("OSINT", font='doom')
+        print(texto)
+        print(" 1. Username (BETA)              ")
+        print(" 2. Voltar                ") 
+
+        
 
 
 
@@ -22,23 +23,21 @@ def executar_osint():
             if usuario_alvo == "":
                 print("\nUsername inválido!")
                 return
-            resposta = engine.run_plugin("Username", usuario_alvo)
-            print(resposta)
+            engine.run_plugin("Username", usuario_alvo)
+
             input("Pressione ENTER para retornar ao menu...")
 
 def executar_hardconfig():
-        print("╔═══════════════════════════╗")
-        print("║        HARD CONFIG        ║")
-        print("╚═══════════════════════════╝")
+        texto = pyfiglet.figlet_format("HARDCONFIG", font='doom')
+        print(texto)
         resposta = engine.run_plugin_no_target("HardConfig")
         print(resposta)
         input("Pressione ENTER para retornar ao menu...")
      
 def executar_scan():
 
-        print("╔═══════════════════════════╗")
-        print("║           SCAN            ║")
-        print("╚═══════════════════════════╝")
+        texto = pyfiglet.figlet_format("SCAN", font='doom')
+        print(texto)
         alvo = input(f"\nDigite o domínio do scan: ")
         if alvo == '':
             print("\nDomínio inválido!")
@@ -55,17 +54,39 @@ def executar_scan():
 
 def log_historico():
         print("═"*70)
-        print("╔═══════════════════════════╗")
-        print("║         HISTÓRICO         ║")
-        print("╚═══════════════════════════╝")
-        print(engine.logger.historico())
+        texto = pyfiglet.figlet_format("LOG", font='doom')
+        print(texto)
+
+        for registro in listar_scans():
+            scan_id, id, alvo, plugin, status, resultado = registro
+            print(f"Scan ID: {scan_id}")
+            print(f"ID: {id}")
+            print(f"Alvo: {alvo}")
+            print(f"Plugin: {plugin}")
+            print(f"Status: {status}")
+            print(f"Resultado:")
+        
+    
+            if plugin == "DNS":
+                resultado = json.loads(resultado)
+                for chave, valor in resultado.items():
+                    print(f"{chave}:")
+                    print(valor)
+            else:
+                print(resultado)
+
+
+
+
+
+
+            print("-"*60)
         input("Pressione ENTER para retornar ao menu...")
 
 def mostrar_plugins():
         print("═"*70)
-        print("╔═══════════════════════════╗")
-        print("║          PLUGINS          ║")
-        print("╚═══════════════════════════╝")
+        texto = pyfiglet.figlet_format("PLUGINS", font='doom')
+        print(texto)
         engine.show_plugins()
         print("═"*70)
         input("Pressione ENTER para retornar ao menu...")

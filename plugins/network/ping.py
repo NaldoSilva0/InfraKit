@@ -4,7 +4,7 @@ from core.result import PluginResult
 
 class PingPlugin(Plugin):
     def __init__(self):
-        super().__init__("PING", "Realiza teste de conectividade")
+        super().__init__("PING", "Realiza teste de conectividade", "network")
 
     def run(self, target):
         if target.startswith("http://"):
