@@ -38,10 +38,22 @@ def salvar_scan(scan_id, alvo, plugin, status, resultado):
 
     conexao.commit()
 
-def listar_scans():
+def listar_scans(scan_id):
     consulta = conexao.execute("""
+  
     SELECT  scan_id, id, alvo, plugin, status, resultado
-    FROM scans    
+    FROM scans   
+    WHERE scan_id = ?
+
+""", (scan_id,))
+    
+    return consulta.fetchall()
+
+def listar_sessoes():
+    consulta = conexao.execute("""
+
+    SELECT id, alvo
+    FROM scan_sessions    
 """)
     return consulta.fetchall()
 

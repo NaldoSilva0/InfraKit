@@ -2,7 +2,7 @@ import pyfiglet
 import time
 from core.engine import Engine
 from cli.menu import menu
-from core.database import listar_scans
+from core.database import listar_scans, listar_sessoes 
 import json
 
 engine = Engine()
@@ -54,33 +54,85 @@ def executar_scan():
 
 def log_historico():
         print("═"*70)
+        
         texto = pyfiglet.figlet_format("LOG", font='doom')
         print(texto)
-
-        for registro in listar_scans():
-            scan_id, id, alvo, plugin, status, resultado = registro
-            print(f"Scan ID: {scan_id}")
-            print(f"ID: {id}")
-            print(f"Alvo: {alvo}")
-            print(f"Plugin: {plugin}")
-            print(f"Status: {status}")
-            print(f"Resultado:")
         
-    
-            if plugin == "DNS":
-                resultado = json.loads(resultado)
-                for chave, valor in resultado.items():
-                    print(f"{chave}:")
-                    print(valor)
+        for id, alvo in listar_sessoes():
+            print(f"Scan ID: {id} | Alvo: {alvo}")
+
+        print("")
+
+        while True:
+            lista_sec = []
+            sessoes = listar_sessoes()
+            for id, alvo in sessoes:
+                lista_sec.append(id)
+
+            numero = input("\nDigite o id: ")
+            if numero.isdigit():
+                numero = int(numero)   
+
+            if numero in lista_sec:
+                break
             else:
-                print(resultado)
+                print("Digite um ID válido! ")                
+
+        registros = listar_scans(numero)
+
+        if registros:
+            scan_id, id, alvo, plugin, status, resultado = registros[0]
+
+            print("="*60)
+            print(f"                          SCAN #{scan_id}")
+            print("="*60)            
+            print(f"Alvo: {alvo}")
+            
+
+            if not registros:
+                print("Nenhum resultado encontrado")
+                return
+            for registro in registros:
+                scan_id, id, alvo, plugin, status, resultado = registro
+
+                print(f"\n[{id}] {plugin}")
+                print(f"Status: {status}")
+                print("Resultado: ")
+    
+                if plugin == "DNS":
+                    resultado = json.loads(resultado)
+                    for chave, valor in resultado.items():
+                        print(f"\n[{chave}]:")
+                       
+                        if valor == "Nenhum registro encontrado":
+                            print(valor)
+                        else:
+                            for registro_dns in valor.split("\n"):
+                                print(f"• {registro_dns}")
+                elif plugin == "PortScan":
+                    print(f"{'Porta':<7} | {'Serviço':<7} | {'Status'}")
+                    print("-" * 31)
+                    for linha in resultado.split("\n"):
+                        partes = linha.split()
+                        porta = partes[0]
+                        servico = partes[2]
+                        status = partes[4]
+                        print(f"{porta:<7} | {servico:<7} | {status}")
+                
+                elif plugin == "HTTP":
+                    print(f"{'Processo':<15} | {'Resultado':<7}")
+                    print('-'*31)
+                    for linha in resultado.split("\n"):
+                        partes = linha.split(":", 1)
+                        processo = partes[0]
+                        resul = partes[1]
+                        print(f"{processo:<12} | {resul:<7}")
+
+                else:
+                    print(resultado)
 
 
-
-
-
-
-            print("-"*60)
+                print("="*60)
         input("Pressione ENTER para retornar ao menu...")
 
 def mostrar_plugins():
@@ -90,9 +142,6 @@ def mostrar_plugins():
         engine.show_plugins()
         print("═"*70)
         input("Pressione ENTER para retornar ao menu...")
-
-
-     
 
 def menu_controle():
     while True:

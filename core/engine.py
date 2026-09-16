@@ -18,10 +18,6 @@ class Engine:
         self.logger = Logger("logs/infrakit.log")
         self.load_plugins()
 
-
-
-
-
     def load_plugins(self):
         for raiz, diretorios, arquivos in os.walk("plugins"):
              diretorios[:] = [d for d in diretorios if d != "__pycache__"]
@@ -77,9 +73,6 @@ class Engine:
                 resposta = plugin.run(target)
                 lista_plugin.append(resposta)
 
-                registro_log = f"{target} | {resposta.nome:<8} | {resposta.status}"
-                self.logger.log(registro_log)
-
                 salvar_scan(
                     scan_id,
                     target,
@@ -89,12 +82,8 @@ class Engine:
                 )
 
             except Exception as erro:
-                #print(f"ERRO NO PLUGIN {plugin.name}: {erro}")
-
                 resposta = PluginResult(plugin.name, "ERRO!", erro)
-                lista_plugin.append(resposta)
 
-            registro_log = f"{target} | {resposta.nome:<6} | {resposta.status}"
         scan_retornar = ScanResult(target, lista_plugin)
         return scan_retornar
 
